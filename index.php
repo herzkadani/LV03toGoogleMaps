@@ -8,8 +8,15 @@ $linkvisibility = (isset($_POST['submit'])) ? 'visible' : 'hidden';
 
 $link = "";
 if (isset($_POST['submit'])) {
+    if (isset($_POST['fullLV'])) {
+        $fullLV = trim($_POST['fullLV']);
+        $eastLV = substr($fullLV, 2, 3).substr($fullLV, 6, 3);
+        $northLV = substr($fullLV, 17, 3).substr($fullLV, 21, 3);
+        print($eastLV . " " . $northLV);
+    } else {
     $eastLV = (strlen($_POST['eastLV']) > 6) ? substr($_POST['eastLV'], 1, 6) : $_POST['eastLV'];
     $northLV = (strlen($_POST['northLV']) > 6) ? substr($_POST['northLV'], 1, 6) : $_POST['northLV'];
+    }
     $wsgLat = CHtoWGSlat($eastLV, $northLV);
     $wsgLong = CHtoWGSlong($eastLV, $northLV);
     $link = 'https://www.google.com/maps/search/?api=1&query=' . strval($wsgLat) . '%2C' . strval($wsgLong);
@@ -33,11 +40,14 @@ if (isset($_POST['submit'])) {
     <p class="small">Koordinaten können sowohl im LV03 (600 000 / 200 000) oder LV95 (2 600 000 / 1 200 000) Format eingegeben werden.</p>
     <form action="" method="post">
         <div><label for="eastLV">Ost ( (2) 600 000 )</label>
-            <input type="number" name="eastLV" value="<?= (isset($_POST['submit'])) ? $_POST['eastLV'] : ""; ?>" required>
+            <input type="number" name="eastLV" value="<?= (isset($_POST['submit'])) ? $_POST['eastLV'] : ""; ?>">
         </div>
 
         <div><label for="eastLV">Nord ( (1) 200 000 )</label>
-            <input type="number" name="northLV" value="<?= (isset($_POST['submit'])) ? $_POST['northLV'] : ""; ?>" required>
+            <input type="number" name="northLV" value="<?= (isset($_POST['submit'])) ? $_POST['northLV'] : ""; ?>">
+        </div>
+    <div><label for="fullLV">Geo Admin Format ( 2'600'000.000, 1'200'000.000, 0.0 )</label>
+            <input type="text" name="fullLV" value="<?= (isset($_POST['submit'])) ? $_POST['fullLV'] : ""; ?>">
         </div>
         <div><input type="submit" value="Link erstellen" name="submit"></div>
         <div><input type="reset" value="Eingabe löschen" name="clear"></div>
